@@ -79,6 +79,12 @@ def argmax(A, axis=0):
         return max_row, max_col
 
 
+def to_file(A, filename):
+    """ Save matrix coefficients to file """
+    with open(filename, "w+") as f:
+        print(A, file=f)
+
+
 if __name__ == '__main__':
     A = Matrix([[1, 2, 20, 3, -5, 0],
                 [0, 0, 3, -1, 2, 55]])

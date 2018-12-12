@@ -224,6 +224,16 @@ class Matrix(object):
         """ Compare two floating-point numbers """
         return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
+    def norm(self, norm=2):
+        """
+
+        Calculate matrix norm
+
+        :param norm: which norm to calculate
+        :return:
+        """
+        raise NotImplementedError
+
 
 if __name__ == '__main__':
     A = Matrix([[5, 0, -7, 0],

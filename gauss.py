@@ -58,8 +58,13 @@ def gauss_inv(A):
     """
     if A.shape[0] != A.shape[1]:
         raise ValueError("Inverse of non-square matrix")
-    X, A_inv = solve_gauss(A, np.eye(A.shape[0]))
+    A_inv = solve_gauss(A, np.eye(A.shape[0]))
     return A_inv
+
+
+def residual(A, x, b):
+    """ Calculate residual vector """
+    return A @ x - b
 
 
 def parse_assignment():
@@ -86,23 +91,27 @@ def split_input(M):
     return X, b
 
 
-def output_result(X, b):
+def condition_number(A, norm=2):
+    """ Calculate condition number for matrix A """
+    return A.norm(norm) * gauss_inv(A).norm(norm)
+
+
+def output_result(x, solved=True, filename=None):
     """
     Check the result of gauss solve and output the result in proper format
     :param X:
-    :param b:
     :return:
     """
     # if system has unique solution, we have Identity matrix in X
-    e = eye(X.shape[0])
-    if np.all(X.round(2) == e):
-        print(" ".join([str(round(_, 5)) for _ in b]))
+    f = None if filename is None else open(filename, "w+")
+    if solved:
+            print(" ".join([str(round(_, 5)) for _ in x]), file=f)
     else:
         # No solution or infinitely many solutions? Who cares?
-        print(-1)
+        print(-1, file=f)
 
 
 if __name__ == '__main__':
     X, b = split_input(parse_assignment())
-    A, b_solved = solve_gauss(X, b.T)
-    output_result(A, b_solved)
+    b_solved = solve_gauss(X, b.T)
+    output_result(b_solved)
