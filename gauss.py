@@ -11,8 +11,10 @@ def solve_gauss(A, b):
     1) Swapping two rows
     2) Multiplying a row by a nonzero number
     3) Adding a multiple of one row another row
-    :param A:
-    :return: A
+    :param A: matrix of coefficients
+    :param b: column vector of free terms
+    :return: x column vector if SOLE is solvable
+    :raises ValueError if SOLE is a singular matrix
     """
     nrow, ncol = A.shape if len(A.shape) == 2 else (A.shape, None)
     X = A[:, :]  # Make a copy (needed for np.array)
@@ -39,7 +41,12 @@ def solve_gauss(A, b):
                 k = X[j, i]
                 X[j, :] -= X[i, :] * k
                 b[j, :] -= b[i, :] * k
-    return X, b
+    if X.shape[0] == X.shape[1] and not X.is_close(eye(X.shape[0])):
+        raise ValueError("Singular matrix")
+    elif X.shape[0] > X.shape[1]:
+        raise ValueError("Singular matrix")
+    else:
+        return b
 
 
 def gauss_inv(A):

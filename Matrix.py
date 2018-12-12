@@ -199,3 +199,35 @@ class Matrix(object):
         :return: transposed Matrix
         """
         return Matrix([[self[i, j] for i in range(self.shape[0])] for j in range(self.shape[1])])
+
+    def __matmul__(self, other):
+        """ [vector|matrix] multiplication """
+        if self.shape[1] != other.shape[0]:
+            raise IndexError(f"Dimensions must match: {self.shape} and {other.shape}")
+        r = Matrix([[0 for _ in range(other.shape[1])] for _ in range(self.shape[0])])
+        for i, row in enumerate(self.values):
+            for j, col in enumerate(other.T.values):
+                r[i, j] = sum([r * c for r, c in zip(row, col)])
+        return r
+
+    def is_close(self, other):
+        """ Check if all entries are equal (controlling for floating-point errors) """
+        if self.shape != other.shape:
+            raise IndexError(f"Dimensions must match: {self.shape} and {other.shape}")
+        for i in range(self.shape[0]):
+            for j in range(self.shape[1]):
+                if not self._is_close(self[i, j], other[i, j]):
+                    return False
+        return True
+
+    def _is_close(self, a, b, rel_tol=1e-09, abs_tol=.0):
+        """ Compare two floating-point numbers """
+        return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+
+
+if __name__ == '__main__':
+    A = Matrix([[5, 0, -7, 0],
+                [-1, 6, 0, 1],
+                [2, -6, -4, -5],
+                [-6, -6, 15, 7]])
+    print(A @ Matrix([[0], [1], [2], [0]]))
