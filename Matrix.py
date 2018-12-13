@@ -102,18 +102,22 @@ class Matrix(object):
                     self.values[r][c] = value[c]
 
     def __add__(self, other):
-        cpy = self[:, :]
-        for i in range(self.shape[0]):
-            try:
-                for j, v in zip(range(self.shape[1]), other):
-                    cpy[i, j] += v
-            except TypeError:
+        cpy = self.copy()
+        if not hasattr(other, '__len__'):
+            # assume other to be a single value, add to every element
+            for i in range(self.shape[0]):
                 for j in range(self.shape[1]):
                     cpy[i, j] += other
+        elif self.shape != other.shape:
+            raise ValueError(f"Add operation is defined for matrices of the same shape:"
+                             f"{self.shape} != {other.shape}")
+        for i in range(self.shape[0]):
+            for j in range(self.shape[1]):
+                cpy[i, j] += other[i, j]
         return cpy
 
     def __rmul__(self, other):
-        cpy = self[:, :]
+        cpy = self.copy()
         for i in range(self.shape[0]):
             try:
                 for j, v in zip(range(self.shape[1]), other):
@@ -123,6 +127,10 @@ class Matrix(object):
                     cpy[i, j] *= other
         return cpy
 
+    def copy(self):
+        """ Return a copy of a matrix """
+        return Matrix([[self[i, j] for j in range(self.shape[1])] for i in range(self.shape[0])])
+
     def __mul__(self, other):
         return self.__rmul__(other)
 
@@ -130,7 +138,7 @@ class Matrix(object):
         return self.__add__(-other)
 
     def __truediv__(self, other):
-        cpy = self[:, :]
+        cpy = self.copy()
         for i in range(self.shape[0]):
             try:
                 for j, v in zip(range(self.shape[1]), other):
@@ -141,7 +149,7 @@ class Matrix(object):
         return cpy
 
     def __neg__(self):
-        cpy = self[:, :]
+        cpy = self.copy()
         for i in range(self.shape[0]):
             for j in range(self.shape[1]):
                 cpy[i, j] = -cpy[i, j]
@@ -153,7 +161,7 @@ class Matrix(object):
         :param v:
         :return:
         """
-        cpy = self[:, :]
+        cpy = self.copy()
         for i in range(self.shape[0]):
             for j in range(self.shape[1]):
                 cpy[i, j] = round(cpy[i, j], v)
@@ -182,6 +190,13 @@ class Matrix(object):
                     return False
         return True
 
+    def __pow__(self, power, modulo=None):
+        cpy = self.copy()
+        for i in range(cpy.shape[0]):
+            for j in range(cpy.shape[1]):
+                cpy[i, j] = pow(cpy[i, j], power, modulo)
+        return cpy
+
     def __ne__(self, other):
         return not self.__eq__(other)
 
@@ -209,6 +224,9 @@ class Matrix(object):
             for j, col in enumerate(other.T.values):
                 r[i, j] = sum([r * c for r, c in zip(row, col)])
         return r
+
+    def __len__(self):
+        return self.shape[0]
 
     def is_close(self, other):
         """ Check if all entries are equal (controlling for floating-point errors) """
@@ -241,8 +259,13 @@ class Matrix(object):
 
 
 if __name__ == '__main__':
-    A = Matrix([[5, 0, -7, 0],
-                [-1, 6, 0, 1],
-                [2, -6, -4, -5],
-                [-6, -6, 15, 7]])
-    print(A @ Matrix([[0], [1], [2], [0]]))
+    # A = Matrix([[5, 0, -7, 0],
+    #             [-1, 6, 0, 1],
+    #             [2, -6, -4, -5],
+    #             [-6, -6, 15, 7]])
+    # print(A @ Matrix([[0], [1], [2], [0]]))
+    b = Matrix([[3],
+                [-9],
+                [-7],
+                [4]])
+    print(b - b)

@@ -83,7 +83,7 @@ def gauss_inv(A):
     """
     if A.shape[0] != A.shape[1]:
         raise ValueError("Inverse of non-square matrix")
-    return s.solve(A, eye(A.shape[0]))
+    return SoleSolver().solve(A, eye(A.shape[0]))
 
 
 def residual(A, x, b):
