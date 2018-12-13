@@ -224,7 +224,7 @@ class Matrix(object):
         """ Compare two floating-point numbers """
         return abs(a - b) <= tol
 
-    def norm(self, norm=2):
+    def norm(self, norm=1):
         """
 
         Calculate matrix norm
@@ -232,7 +232,12 @@ class Matrix(object):
         :param norm: which norm to calculate
         :return:
         """
-        raise NotImplementedError
+        if norm == 1:
+            return max([sum([abs(_) for _ in self[:, j]]) for j in range(self.shape[1])])
+        elif norm == float('inf'):
+            return max([sum([abs(_) for _ in self[i, :]]) for i in range(self.shape[0])])
+        else:
+            raise NotImplementedError(f"{norm}-norm is not implemented!")
 
 
 if __name__ == '__main__':

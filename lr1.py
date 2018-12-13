@@ -1,6 +1,6 @@
 # Pavel Tyshevskyi - Variant 2
 from Matrix import Matrix
-from gauss import solve_gauss, SoleSolver
+from gauss import SoleSolver, gauss_inv, cond
 
 
 def A_task(s):
@@ -46,3 +46,8 @@ if __name__ == '__main__':
     print()
     print(K_task(s))
     print(f"Error: {s.error}, number of solutions: {s.n_solutions}")
+    A = Matrix([[5, 0, -7, 0],
+                [-1, 6, 0, 1],
+                [2, -6, -4, -5],
+                [-6, -6, 15, 7]])
+    gauss_inv(A)
