@@ -1,9 +1,9 @@
 # Pavel Tyshevskyi - Variant 2
 from Matrix import Matrix
-from gauss import solve_gauss
+from gauss import solve_gauss, SoleSolver
 
 
-def A_task():
+def A_task(s):
     A = Matrix([[2, 2, -1, 1],
                 [-3, 0, 3, 0],
                 [-1, 3, 3, 2],
@@ -12,10 +12,10 @@ def A_task():
                 [-9],
                 [-7],
                 [4]])
-    return solve_gauss(A, b)
+    return s.solve(A, b)
 
 
-def G_task():
+def G_task(s):
     A = Matrix([[-7, -6, -6, 6],
                 [7, 6, 8, -13],
                 [4, 17, -16, 10],
@@ -24,9 +24,9 @@ def G_task():
                 [-170],
                 [21],
                 [-445]])
-    return solve_gauss(A, b)
+    return s.solve(A, b)
 
-def K_task():
+def K_task(s):
     A = Matrix([[5, 0, -7, 0],
                 [-1, 6, 0, 1],
                 [2, -6, -4, -5],
@@ -35,12 +35,14 @@ def K_task():
                 [60],
                 [-108],
                 [159]])
-    return solve_gauss(A, b)
+    return s.solve(A, b)
 
 
 if __name__ == '__main__':
-    print(A_task())
+    s = SoleSolver()
+    print(A_task(s))
     print()
-    print(G_task())
+    print(G_task(s))
     print()
-    print(K_task())
+    print(K_task(s))
+    print(f"Error: {s.error}, number of solutions: {s.n_solutions}")
