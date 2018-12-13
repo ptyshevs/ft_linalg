@@ -94,7 +94,8 @@ def cond(A, norm=1):
     """ Calculate condition number for matrix A """
     A_inv = gauss_inv(A)
     if A_inv is None:
-        raise ValueError("Singular matrix: Conditional number cannot be calculated")
+        print("Singular matrix: Conditional number cannot be calculated")
+        return -1
     return A.norm(norm) * A_inv.norm(norm)
 
 
