@@ -1,5 +1,4 @@
 import numpy as np
-from Matrix import Matrix
 from matrix_tools import eye
 from io_tools import parse_assignment, split_input, output_result
 
