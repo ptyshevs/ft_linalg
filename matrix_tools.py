@@ -79,6 +79,24 @@ def argmax(A, axis=0):
         return max_row, max_col
 
 
+def cut_diagonal(A):
+    nrow, ncol = A.shape
+    D = eye(nrow)
+    for i in range(nrow):
+        D[i, i] = A[i, i]
+    return D
+
+
+def cut_lower_triangular(A, strict=True):
+    nrow, ncol = A.shape
+    X = A.copy()
+    for i in range(nrow):
+        for j in range(ncol):
+            if j > i or (strict and j >= i):
+                X[i, j] = 0
+    return X
+
+
 def to_file(A, filename):
     """ Save matrix coefficients to file """
     with open(filename, "w+") as f:

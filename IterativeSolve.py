@@ -1,6 +1,6 @@
 import numpy as np
 from Matrix import Matrix
-from matrix_tools import eye
+from matrix_tools import eye, cut_diagonal, cut_lower_triangular
 from gauss import gauss_inv
 
 
@@ -33,6 +33,26 @@ def jacobi_solver(A, b, x0=None, max_iter=100, eps=0.001):
         x = D_inv @ (b - R @ x)
     return x
 
+# Successive Over Relaxation
+def sor_solver(A, b, w=2, x0=None, max_iter=100, eps=0.001):
+    nrow, ncol = A.shape
+    if nrow != ncol:
+        print("Cannot solve non-square SOLE!")
+        return None
+    D = cut_diagonal(A)
+    L = cut_lower_triangular(A)
+    R = A - L - D
+
+    B = gauss_inv(D + w * L) @ ((1 - w) * D - w * R)
+    c = w * gauss_inv(D + w * L) @ b
+    if x0 is not None:
+        x = x0
+    else:
+        x = Matrix([[0] * b.shape[0]]).T
+    for i in range(max_iter):
+        x = B @ x + c
+    return x
+
 
 if __name__ == '__main__':
     # A = Matrix([[1.7, 2.8, 1.9],
@@ -58,5 +78,5 @@ if __name__ == '__main__':
                 [2.3],
                 [3.4]])
 
-    x = jacobi_solver(A, b)
+    x = sor_solver(A, b)
     print("solution:", x)
