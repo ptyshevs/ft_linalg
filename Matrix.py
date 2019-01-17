@@ -142,7 +142,10 @@ class Matrix(object):
         for i in range(self.shape[0]):
             try:
                 for j, v in zip(range(self.shape[1]), other):
-                    cpy[i, j] /= v
+                    if hasattr(v, '__len__'):
+                        cpy[i, j] /= v[j]
+                    else:
+                        cpy[i, j] /= v
             except TypeError:
                 for j in range(self.shape[1]):
                     cpy[i, j] /= other
