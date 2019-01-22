@@ -1,5 +1,7 @@
 import numpy as np
-from gauss import solve_gauss, Matrix, eye
+from solvers import solve_gauss
+from Matrix import Matrix
+from matrix_tools import eye
 
 
 def test_empty():
@@ -9,11 +11,11 @@ def test_empty():
     :return:
     """
     a = Matrix([])
-    X, b_solved = solve_gauss(a, Matrix())
-    print(a.shape)
-    print(a[:, :].shape)
-    assert X != a
-
+    try:
+        x = solve_gauss(a, Matrix())
+        assert False
+    except ValueError as e:
+        assert True
 
 def test_single():
     """
@@ -21,8 +23,8 @@ def test_single():
     :return:
     """
     a = Matrix([[1]])
-    X, b_solved = solve_gauss(a, Matrix())
-    assert X == a
+    x = solve_gauss(a, Matrix())
+    assert x == []
 
 
 def test_wiki():
@@ -36,8 +38,9 @@ def test_wiki():
     b = np.array([[8],
                   [-11],
                   [-3]], np.float64)
-    X, b_solved = solve_gauss(a, b)
-    assert np.all(b_solved == np.array([[2],
+    x = solve_gauss(a, b)
+    print(x)
+    assert np.all(x == np.array([[2],
                                  [3],
                                  [-1]]))
 
@@ -52,8 +55,8 @@ def test_with_mat():
                 [2, 1, 2, 1],
                 [3, 2, 2, 1]])
     b = Matrix([[4], [2], [0], [2]])
-    A, b_solved = solve_gauss(X, b)
-    assert np.all(b_solved.round(2) == Matrix([[0], [2], [0], [-2]]))
+    x = solve_gauss(X, b)
+    assert np.all(x.round(2) == Matrix([[0], [2], [0], [-2]]))
 
 
 def test_non_solvable():
@@ -63,8 +66,8 @@ def test_non_solvable():
     """
     X = Matrix([[7, 1], [14, 2]])
     b = Matrix([[-3], [1]])
-    A, b_solved = solve_gauss(X, b)
-    assert A != eye(2)
+    x = solve_gauss(X, b)
+    assert x is None
 
 
 def test_ex1():
@@ -75,8 +78,8 @@ def test_ex1():
     X = Matrix([[3, -1],
                 [-4, 2]])
     b = Matrix([[4], [2]])
-    A, b_solved = solve_gauss(X, b)
-    assert A == eye(2) and b_solved.round(2) == Matrix([[5], [11]])
+    x = solve_gauss(X, b)
+    assert x.round(2) == Matrix([[5], [11]])
 
 
 def test_ex2():
@@ -87,8 +90,8 @@ def test_ex2():
     X = Matrix([[3, 4],
                 [-6, 3]])
     b = Matrix([[10], [-9]])
-    A, b_solved = solve_gauss(X, b)
-    assert A == eye(2) and b_solved.round(2) == Matrix([[2], [1]])
+    x = solve_gauss(X, b)
+    assert x.round(2) == Matrix([[2], [1]])
 
 
 def test_ex3():
@@ -99,8 +102,8 @@ def test_ex3():
     X = Matrix([[7, 4],
                 [-2, 5]])
     b = Matrix([[-5], [26]])
-    A, b_solved = solve_gauss(X, b)
-    assert A == eye(2) and b_solved.round(2) == Matrix([[-3], [4]])
+    x = solve_gauss(X, b)
+    assert x.round(2) == Matrix([[-3], [4]])
 
 
 def test_ex4():
@@ -111,8 +114,8 @@ def test_ex4():
     X = Matrix([[2, 4],
                 [3, 5]])
     b = Matrix([[-12], [-16]])
-    A, b_solved = solve_gauss(X, b)
-    assert A == eye(2) and b_solved.round(2) == Matrix([[-2, -2]]).T
+    x = solve_gauss(X, b)
+    assert x.round(2) == Matrix([[-2, -2]]).T
 
 
 def test_ex5():
@@ -123,8 +126,8 @@ def test_ex5():
     X = Matrix([[1, 2],
                 [2, 4]])
     b = Matrix([[5], [2]])
-    A, b_solved = solve_gauss(X, b)
-    assert A != eye(2)
+    x = solve_gauss(X, b)
+    assert x is None
 
 
 def test_too_many_equations():
@@ -137,8 +140,8 @@ def test_too_many_equations():
                 [-1, 1, 2],
                 [0, 5, 2]])
     b = Matrix([[-8], [0], [3], [2]])
-    A, b_solved = solve_gauss(X, b)
-    assert A != eye(3) and b_solved.round(2) != Matrix([[-4, 5, -2]]).T
+    x = solve_gauss(X, b)
+    assert x.round(2) != Matrix([[-4, 5, -2]]).T
 
 
 def test_too_many_variables():
@@ -150,8 +153,8 @@ def test_too_many_variables():
                 [1, -2, -3, 5],
                 [-1, 1, 2, 2]])
     b = Matrix([[-4, 5, -2]]).T
-    A, b_solved = solve_gauss(X, b)
-    assert A != eye(3) and b_solved.round(2) != Matrix([[-4, 5, -2]]).T
+    x = solve_gauss(X, b)
+    assert x.round(2) != Matrix([[-4, 5, -2]]).T
 
 
 def test_ex6():
@@ -163,24 +166,24 @@ def test_ex6():
                 [2, 7, 3],
                 [2, 8, 6]])
     b = Matrix([[3], [-7], [-4]])
-    A, b_solved = solve_gauss(X, b)
-    assert A == eye(3) and b_solved.round(2) == Matrix([[4, -3, 2]]).T
+    x = solve_gauss(X, b)
+    assert x.round(2) == Matrix([[4, -3, 2]]).T
     X = Matrix([[2, 8, -4],
                 [2, 11, 5],
                 [4, 18, 3]])
     b = Matrix([[0], [9], [11]])
-    A, b_solved = solve_gauss(X, b)
-    assert A == eye(3) and b_solved.round(2) == Matrix([[2, 0, 1]]).T
+    x = solve_gauss(X, b)
+    assert x.round(2) == Matrix([[2, 0, 1]]).T
     X = Matrix([[0, 2, 6],
                 [3, 9, 4],
                 [1, 3, 5]])
     b = Matrix([[2], [7], [6]])
-    A, b_solved = solve_gauss(X, b)
-    assert A == eye(3) and b_solved.round(2) == Matrix([[7, -2, 1]]).T
+    x = solve_gauss(X, b)
+    assert x.round(2) == Matrix([[7, -2, 1]]).T
     X = Matrix([[1, 3, 2, 5],
                 [-1, 2, -2, 5],
                 [2, 6, 4, 7],
                 [0, 5, 2, 6]])
     b = Matrix([[11], [-6], [19], [5]])
-    A, b_solved = solve_gauss(X, b)
-    assert A == eye(4) and b_solved.round(2) == Matrix([[5, -1, 2, 1]]).T
+    x = solve_gauss(X, b)
+    assert x.round(2) == Matrix([[5, -1, 2, 1]]).T

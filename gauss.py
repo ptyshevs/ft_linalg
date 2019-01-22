@@ -57,7 +57,7 @@ class SoleSolver:
                     k = X[j, i]
                     X[j, :] -= X[i, :] * k
                     b[j, :] -= b[i, :] * k
-        if self.is_singular(X):
+        if nrow == ncol and self.is_singular(X):
             self.error = "singular matrix"
             return None
         self.n_solutions = 1
@@ -67,10 +67,10 @@ class SoleSolver:
         """ Check if matrix is singular """
         if A.shape[0] != A.shape[1]:
             raise ValueError("Singular matrix is defined only for square matrices")
-        if not A.is_close(eye(A.shape[0])):
-            return True
+        if type(A) is np.ndarray:
+            return not np.allclose(A, np.eye(A.shape[0]), rtol=0.01, atol=0.01)
         else:
-            return False
+            return not A.is_close(eye(A.shape[0]))
 
 
 def gauss_inv(A):

@@ -1,4 +1,3 @@
-import numpy as np
 from Matrix import Matrix
 from IterativeSolve import jacobi_solver
 

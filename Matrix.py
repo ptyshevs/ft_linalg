@@ -95,7 +95,11 @@ class Matrix(object):
         else:
             row_it = range(*row.indices(len(self.values)))
         for r in row_it:
-            if type(col) is int:
+            if type(col) is int and hasattr(value, 'shape') and r < value.shape[1]:  # assigning values from Matrix-like object
+                self.values[r][col] = value[r]
+            elif type(col) is int and hasattr(value, 'shape') and value.shape == (1, 1):
+                self.values[r][col] = value[0, 0]
+            elif type(col) is int:
                 self.values[r][col] = value
             else:
                 for c in range(*col.indices(len(self.values[0]))):
@@ -108,6 +112,7 @@ class Matrix(object):
             for i in range(self.shape[0]):
                 for j in range(self.shape[1]):
                     cpy[i, j] += other
+            return cpy
         elif self.shape != other.shape:
             raise ValueError(f"Add operation is defined for matrices of the same shape:"
                              f"{self.shape} != {other.shape}")
@@ -115,6 +120,9 @@ class Matrix(object):
             for j in range(self.shape[1]):
                 cpy[i, j] += other[i, j]
         return cpy
+
+    def __radd__(self, other):
+        return self.__add__(other)
 
     def __rmul__(self, other):
         cpy = self.copy()
@@ -257,8 +265,16 @@ class Matrix(object):
             return max([sum([abs(_) for _ in self[:, j]]) for j in range(self.shape[1])])
         elif norm == float('inf'):
             return max([sum([abs(_) for _ in self[i, :]]) for i in range(self.shape[0])])
+        elif norm == 2 and (self.shape[0] == 1 or self.shape[1] == 1):
+            return self._euclidean_norm()
         else:
             raise NotImplementedError(f"{norm}-norm is not implemented!")
+
+    def _euclidean_norm(self):
+        if self.shape[0] == 1:
+            return sum(self[0, :] ** 2) ** 0.5
+        elif self.shape[1] == 1:
+            return sum(self[:, 0] ** 2) ** 0.5
 
 
 if __name__ == '__main__':
