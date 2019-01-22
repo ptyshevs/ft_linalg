@@ -1,5 +1,5 @@
 from Matrix import Matrix
-from matrix_tools import zeros, eye
+from matrix_tools import zeros, eye, is_close
 
 
 def _qr_gram_schmidt(A):
@@ -20,6 +20,31 @@ def _qr_gram_schmidt(A):
 def qr(A, method='gram_schmidt'):
     if method == 'gram_schmidt':
         return _qr_gram_schmidt(A)
+
+
+def lu(A):
+    nrow, ncol = A.shape if len(A.shape) == 2 else (A.shape, None)
+    U = A[:, :]  # Make a copy (needed for np.array)
+    one = eye(nrow)
+    L = eye(nrow)
+
+    for i in range(min((nrow, ncol))):
+        if is_close(U[i, i], 0.0):  # find row with non-zero on the pivot place, swap
+            swapped = False
+            for j in range(i + 1, nrow):
+                if not is_close(U[j, i], 0.0):
+                    U[i, :], U[j, :] = U[j, :], U[i, :]
+                    swapped = True
+                    break
+            if not swapped:  # either no or inf solutions
+                break
+
+        for j in range(i + 1, nrow):  # Remove corresponding coef. in other equations
+            if not is_close(U[j, i], 0):
+                k = U[j, i] / U[i, i]  # scale factor
+                U[j, :] -= U[i, :] * k
+                L[j, :] += one[i, :] * k
+    return L, U
 
 
 if __name__ == '__main__':

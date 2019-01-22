@@ -20,6 +20,11 @@ def flipud(A):
     return A[::-1]
 
 
+def is_close(a, b, tol=1e-13):
+    """ Python stores 15 digits after comma, thus this weird tolerance """
+    return abs(a - b) < tol
+
+
 def zeros(shape):
     """
     Create Matrix of size <shape>, filled with zeros.
