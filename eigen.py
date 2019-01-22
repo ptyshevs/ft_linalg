@@ -1,4 +1,6 @@
 from Matrix import Matrix
+from decomposition import qr
+from matrix_tools import cut_diagonal
 
 
 def power_iteration(A, x0=None, n_iter=100):
@@ -45,15 +47,31 @@ def spectral_radius(A):
     return abs(eigenvalue(A, x))
 
 
+def qr_eigen(A, n_iter=10):
+    """
+    Search for all eigenvalues using QR algorithm
+    :param A:
+    :param n_iter:
+    :return:
+    """
+    for i in range(n_iter):
+        Q, R = qr(A)
+        A = R @ Q
+    return Matrix([[A[i, j] for j in range(A.shape[1]) if i == j] for i in range(A.shape[0])])
+
+
 if __name__ == '__main__':
     # example from https://www.utdallas.edu/~herve/Abdi-EVD2007-pretty.pdf
-    A = Matrix([[2, 3],
-                [2, 1]])
+    A = Matrix([[-2,4, 2],
+                [-2, 1, 2],
+                [4, 2, 5]])
 
-    A = Matrix([[2, -12],
-                [1, -5]])
-    x = power_iteration(A)
-    print("x:", x)
-    print("Ax:")
-    print((A @ x))
-    print("Rayleigh quotient:", eigenvalue(A, x))
+    A = Matrix([[1, -3, 3],
+                [3, -5, 3],
+                [6, -6, 4]])
+
+    # A = Matrix([[2, -12],
+    #             [1, -5]])
+    X = qr_eigen(A, 1000)
+    print(X)
+    print(X.shape)

@@ -1,4 +1,4 @@
-from eigen import power_iteration, eigenvalue
+from eigen import power_iteration, eigenvalue, qr_eigen
 from Matrix import Matrix
 from matrix_tools import is_close
 
@@ -18,6 +18,7 @@ def test_example1_2x2():
     true_eigvec /= true_eigvec.norm(2)
     assert true_eigvec.is_close(x)
 
+
 def test_example2_2x2():
     A = Matrix([[2, -12],
                 [1, -5]])
@@ -29,3 +30,14 @@ def test_example2_2x2():
                    [1]])
     true_eigvec /= true_eigvec.norm(2)
     assert true_eigvec.is_close(x)
+
+
+def test_qr_eignevalues_3x3():
+    A = Matrix([[1, -3, 3],
+                [3, -5, 3],
+                [6, -6, 4]])
+    eigv = qr_eigen(A, 50)
+
+    assert eigv.is_close(Matrix([[4],
+                                 [-2],
+                                 [-2]]))

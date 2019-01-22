@@ -18,11 +18,22 @@ def _qr_gram_schmidt(A):
 
 
 def qr(A, method='gram_schmidt'):
+    """
+    QR-factorization
+    :param A:
+    :param method:
+    :return: Q (orthogonal matrix), R (upper-triangular rotation matrix)
+    """
     if method == 'gram_schmidt':
         return _qr_gram_schmidt(A)
 
 
 def lu(A):
+    """
+    LU-factorization using variation of Gaussian elimination
+    :param A:
+    :return: L, U
+    """
     nrow, ncol = A.shape if len(A.shape) == 2 else (A.shape, None)
     U = A[:, :]  # Make a copy (needed for np.array)
     one = eye(nrow)
