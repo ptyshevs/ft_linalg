@@ -1,7 +1,7 @@
 import numpy as np
 from Matrix import Matrix
 from eigen import spectral_radius
-from matrix_tools import eye, cut_diagonal, cut_lower_triangular
+from ft_linalg import eye, cut_diagonal, cut_lower_triangular
 from gauss import gauss_inv
 
 

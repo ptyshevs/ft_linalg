@@ -1,7 +1,7 @@
 import numpy as np
 from solvers import solve_gauss
 from Matrix import Matrix
-from matrix_tools import eye
+from ft_linalg import eye
 
 
 def test_empty():

@@ -1,5 +1,5 @@
-from decomposition import qr, lu
-from matrix_tools import eye
+from decomposition import qr, lu, cholesky
+from ft_linalg import eye
 from Matrix import Matrix
 
 
@@ -60,3 +60,15 @@ def test_QR_example2_3x3():
     Q, R = qr(A)
     assert (Q @ R).round() == A
     assert (Q.T @ Q).round() == eye(A.shape[1])
+
+
+def test_Cholesky_3x3():
+    A = Matrix([[4, 12, -16],
+                [12, 37, -43],
+                [-16, -43, 98]])
+
+    L = cholesky(A)
+    assert L.is_close(Matrix([[2, 0, 0],
+                              [6, 1, 0],
+                              [-8, 5, 3]]))
+    assert (L @ L.T).is_close(A)

@@ -1,6 +1,6 @@
 import numpy as np
 from Matrix import Matrix
-from matrix_tools import eye
+from ft_linalg import eye
 from gauss import SoleSolver, cond
 
 

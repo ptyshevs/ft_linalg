@@ -1,6 +1,6 @@
 from Matrix import Matrix
 from decomposition import qr
-from matrix_tools import cut_diagonal
+from ft_linalg import cut_diagonal
 
 
 def power_iteration(A, x0=None, n_iter=100):

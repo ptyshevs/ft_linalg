@@ -1,6 +1,6 @@
 from decomposition import lu
 from solvers import solve
-from matrix_tools import eye
+from ft_linalg import eye
 
 
 def lu_inv(A):

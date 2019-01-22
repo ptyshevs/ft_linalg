@@ -1,4 +1,4 @@
-from matrix_tools import eye, zeros
+from ft_linalg import eye, zeros
 from Matrix import Matrix
 
 

@@ -1,5 +1,5 @@
 import numpy as np
-from matrix_tools import eye
+from ft_linalg import eye
 from io_tools import parse_assignment, split_input, output_result
 
 

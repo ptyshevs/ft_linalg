@@ -1,6 +1,6 @@
 from eigen import power_iteration, eigenvalue, qr_eigen
 from Matrix import Matrix
-from matrix_tools import is_close
+from ft_linalg import is_close
 
 
 def test_example1_2x2():

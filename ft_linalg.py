@@ -40,6 +40,10 @@ def zeros(shape):
         raise ValueError("Don't understand input shape:", shape)
 
 
+def zeros_like(A):
+    return zeros(A.shape)
+
+
 def argmax(A, axis=0):
     """
     Find index of maximum value in A
