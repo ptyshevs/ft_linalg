@@ -1,5 +1,6 @@
 import numpy as np
 from Matrix import Matrix
+from eigen import spectral_radius
 from matrix_tools import eye, cut_diagonal, cut_lower_triangular
 from gauss import gauss_inv
 
@@ -114,9 +115,7 @@ if __name__ == '__main__':
                 [9],
                 [-6]])
 
-    print("Matrix norm:", A.norm(np.inf))
-    eigv = np.linalg.eigvals(A)
-    print("Eigenvalues:", eigv)
-
-    x = simple_iterations_solve(A, b)
+    print("Matrix norm:", A.norm())
+    print("Spectral raidus", spectral_radius(A))
+    x = jacob_seidel_solver(A, b)
     print("solution:", x)
