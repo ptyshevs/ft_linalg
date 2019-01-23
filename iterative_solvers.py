@@ -5,14 +5,25 @@ from ft_linalg import eye, cut_diagonal, cut_lower_triangular
 from gauss import gauss_inv
 
 
-def simple_iterations_solve(A, b, x0=None, max_iter=100, eps=0.001):
+def simple_iterations_solve(A, b, x0=None, max_iter=100, eps=0.001, prepare=True):
     if x0 is not None:
         x = x0
     else:
         x = Matrix([[0] * b.shape[0]]).T
+    if prepare:
+        B = eye(A.shape[1]) - (2 * A) / A.norm()
+        c = (b * 2) / A.norm()
+    else:
+        B = A
+        c = b
     for i in range(max_iter):
-        x = A @ x + b
+        x_new = B @ x + c
+        if (x_new - x).norm(2) < eps:
+            break
+        else:
+            x = x_new
         # stopping condition
+    print("# of iterations:", i)
     return x
 
 
@@ -29,12 +40,17 @@ def jacobi_solver(A, b, x0=None, max_iter=100, eps=0.001):
     else:
         x = x0
     for i in range(max_iter):
-        x = D_inv @ (b - R @ x)
+        x_new = D_inv @ (b - R @ x)
+        if (x - x_new).norm(2) < eps:
+            break
+        else:
+            x = x_new
+    print("# of iterations:", i)
     return x
 
 
 # Successive Over Relaxation
-def sor_solver(A, b, w=2, x0=None, max_iter=100, eps=0.001):
+def sor_solver(A, b, w=2, x0=None, max_iter=100, eps=10e-4):
     nrow, ncol = A.shape
     if nrow != ncol:
         print("Cannot solve non-square SOLE!")
@@ -50,11 +66,16 @@ def sor_solver(A, b, w=2, x0=None, max_iter=100, eps=0.001):
     else:
         x = Matrix([[0] * b.shape[0]]).T
     for i in range(max_iter):
-        x = B @ x + c
+        x_new = B @ x + c
+        if (x - x_new).norm(2) < eps:
+            break
+        else:
+            x = x_new
+    print("# of iterations:", i)
     return x
 
 
-def jacob_seidel_solver(A, b, x0=None, max_iter=100):
+def jacob_seidel_solver(A, b, x0=None, max_iter=100, tol=10e-4):
     """
     Same as sor_solver with w=1
     :param A:
@@ -71,7 +92,12 @@ def jacob_seidel_solver(A, b, x0=None, max_iter=100):
     else:
         x = Matrix([[0] * b.shape[0]]).T
     for i in range(max_iter):
-        x = L_inv @ (b - U @ x)
+        x_new = L_inv @ (b - U @ x)
+        if (x - x_new).norm(2) < tol:
+            break
+        else:
+            x = x_new
+    print("# of iterations:", i)
     return x
 
 if __name__ == '__main__':
