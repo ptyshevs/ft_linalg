@@ -267,8 +267,14 @@ class Matrix(object):
             return max([sum([abs(_) for _ in self[i, :]]) for i in range(self.shape[0])])
         elif norm == 2 and (self.shape[0] == 1 or self.shape[1] == 1):
             return self._euclidean_norm()
+        elif norm == 'frobenius':
+            return self._frobenius_norm()
         else:
             raise NotImplementedError(f"{norm}-norm is not implemented!")
+
+    def trace(self):
+        n = min(self.shape[0], self.shape[1])
+        return sum([self[_, _] for _ in range(n)])
 
     def _euclidean_norm(self):
         if self.shape[0] == 1:
@@ -276,15 +282,24 @@ class Matrix(object):
         elif self.shape[1] == 1:
             return sum(self[:, 0] ** 2) ** 0.5
 
+    def _frobenius_norm(self, vectorized=True):
+        if vectorized:
+            return (self @ self.T).trace() ** 0.5
+        else:
+            return sum([sum([self[i, j] ** 2 for j in range(self.shape[1])]) for i in range(self.shape[0])]) ** 0.5
+
 
 if __name__ == '__main__':
-    # A = Matrix([[5, 0, -7, 0],
-    #             [-1, 6, 0, 1],
-    #             [2, -6, -4, -5],
-    #             [-6, -6, 15, 7]])
+    A = Matrix([[5, 0, -7, 0],
+                [-1, 6, 0, 1],
+                [2, -6, -4, -5],
+                [-6, -6, 15, 7]])
     # print(A @ Matrix([[0], [1], [2], [0]]))
     b = Matrix([[3],
                 [-9],
                 [-7],
                 [4]])
-    print(b - b)
+    print(A.trace())
+    print(A.T.trace())
+    print(A.norm('frobenius'))
+    print(A)

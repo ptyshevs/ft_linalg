@@ -44,6 +44,19 @@ def zeros_like(A):
     return zeros(A.shape)
 
 
+def vec_to_diag(v):
+    """
+    Create a diagonal matrix from a vector
+    :param v:
+    :return:
+    """
+    n = len(v)
+    A = zeros((n, n))
+    for i in range(n):
+        A[i, i] = v[i]
+    return A
+
+
 def argmax(A, axis=0):
     """
     Find index of maximum value in A
@@ -113,7 +126,8 @@ def to_file(A, filename):
 
 
 if __name__ == '__main__':
-    A = Matrix([[1, 2, 20, 3, -5, 0],
-                [0, 0, 3, -1, 2, 55]])
-    print(argmax(A, axis=2))
-    print(A[argmax(A, axis=2)])
+    v = Matrix([[1],
+                [2],
+                [3]])
+    A = vec_to_diag([0, 2, 3, 1, 2, 33 , 21, 1 ,1 , 1, 3, 4])
+    print(A)
